@@ -6,8 +6,13 @@ void MVA(){
 	TFile *fmc = new TFile("../../data/mcFormat.root","READ");
 	TFile *facc = new TFile("../acc/data_pair/21221.root","READ");
 
+	TChain *acc_chain = new TChain("acc","acc_chain");
+	acc_chain->Add("../acc/data_pair/212*.root");
+	acc_chain->Add("../acc/data_pair/213*.root");
+
 	TTree *sigTree = (TTree*) fmc->Get("tr");
-	TTree *bkgTree = (TTree*) facc->Get("acc");
+	//TTree *bkgTree = (TTree*) facc->Get("acc");
+	TTree *bkgTree = (TTree*)acc_chain;
 
 	double sigW = 1.0;
 	double bkgW = 1.0;
@@ -28,8 +33,8 @@ void MVA(){
 
 	int nTrainS = 1000000;
 	int nTrainB = 1000000;
-	int nTestS = 100000;
-	int nTestB = 100000;
+	int nTestS  = 1000000;
+	int nTestB  = 1000000;
 
 	TString trainOpts = TString::Format("nTrain_Signal=%d:nTrain_Background=%d",nTrainS,nTrainB);
 	TString testOpts = TString::Format("nTest_Signal=%d:nTest_Background=%d",nTestS,nTestB);
@@ -38,9 +43,10 @@ void MVA(){
 	fac->PrepareTrainingAndTestTree(preCut,prepOpts);
 
 	
-	fac->BookMethod(TMVA::Types::kBDT,"BDT");
-	fac->BookMethod(TMVA::Types::kSVM,"SVM");
-	fac->BookMethod(TMVA::Types::kMLP,"TMVA_MLP","HiddenLayers=N+1,N+1:VarTransform=Norm");
+	//fac->BookMethod(TMVA::Types::kBDT,"TMVA_BDT","VarTransform=Norm");
+	//fac->BookMethod(TMVA::Types::kSVM,"TMVA_SVM","VarTransform=Norm");
+	
+	fac->BookMethod(TMVA::Types::kMLP,"TMVA_MLP","VarTransform=Norm:HiddenLayers=N,N-1");
 	//fac->BookMethod(TMVA::Types::kTMlpANN,"ROOT_MLP","!V:HiddenLayers=N+1,N+1");
 
 	fac->TrainAllMethods();
