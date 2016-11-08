@@ -4,11 +4,9 @@ void MVA(){
 	TMVA::Factory *fac = new TMVA::Factory("MVA",fout);
 	
 	TFile *fmc = new TFile("../../data/mcFormat.root","READ");
-	TFile *facc = new TFile("../acc/data_pair/21221.root","READ");
 
 	TChain *acc_chain = new TChain("acc","acc_chain");
-	acc_chain->Add("../acc/data_pair/212*.root");
-	acc_chain->Add("../acc/data_pair/213*.root");
+	acc_chain->Add("../acc/data_pair_sig/*.root");
 
 	TTree *sigTree = (TTree*) fmc->Get("tr");
 	//TTree *bkgTree = (TTree*) facc->Get("acc");
@@ -28,7 +26,7 @@ void MVA(){
 	TCut epCut = "ep>0.7&&ep<12";
 	TCut edCut = "ed>1.5&&ed<12";
 	TCut dtCut = "dt>1&&dt<400";
-	TCut distCut = "dist>0&&dist<5000";
+	TCut distCut = "dist<2500";
 	TCut preCut = epCut&&edCut&&dtCut&&distCut;
 
 	int nTrainS = 1000000;
@@ -46,7 +44,10 @@ void MVA(){
 	//fac->BookMethod(TMVA::Types::kBDT,"TMVA_BDT","VarTransform=Norm");
 	//fac->BookMethod(TMVA::Types::kSVM,"TMVA_SVM","VarTransform=Norm");
 	
-	fac->BookMethod(TMVA::Types::kMLP,"TMVA_MLP","VarTransform=Norm:HiddenLayers=N,N-1");
+	fac->BookMethod(TMVA::Types::kMLP,"TMVA_MLP_9_9","VarTransform=Norm:HiddenLayers=9,9:UseRegulator=True");
+	fac->BookMethod(TMVA::Types::kMLP,"TMVA_MLP_9_9_9","VarTransform=Norm:HiddenLayers=9,9,9:UseRegulator=True");
+	//fac->BookMethod(TMVA::Types::kMLP,"TMVA_MLP_5_5_5_reg","VarTransform=Norm:HiddenLayers=5,5,5:UseRegulator=True");
+	//fac->BookMethod(TMVA::Types::kMLP,"TMVA_MLP_5_5_5_5","VarTransform=Norm:HiddenLayers=5,5,5,5");
 	//fac->BookMethod(TMVA::Types::kTMlpANN,"ROOT_MLP","!V:HiddenLayers=N+1,N+1");
 
 	fac->TrainAllMethods();
