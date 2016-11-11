@@ -1,7 +1,9 @@
+#include "readCFG.h"
 float ep,ed,dt,dist;
 
 void eval(TString weightFile){
 
+	readCFG cfg;
 
 	TMVA::Reader *reader = new TMVA::Reader();
 	reader->AddVariable("ep",&ep);
@@ -16,37 +18,37 @@ void eval(TString weightFile){
 	weightFile.ReplaceAll(".weights.xml","");
 
 
-	//TFile *fin = new TFile("../../data/ibd_ct_EH1.root","READ");	
-	//TFile *fin = new TFile("../../data/ibd_ct_EH1.root","READ");	
 	TChain *chainData = new TChain("IBD");
-	//chainData->Add("../../data_ibd_ct/2*.root");
-	chainData->Add("../../data_ibd_ct/*.root");
-	TFile *fSig = new TFile("../../data/mcFormat.root","READ");
 	TChain *chainBkg = new TChain("acc");
-	chainBkg->Add("../acc/data_pair_sig/*");	
+	TChain *chainSig = new TChain("tr");
+	
+	cout << cfg.dataFile << endl;
+	chainData->Add(cfg.dataFile.c_str());
+	chainSig->Add(cfg.sigFile.c_str());
+	chainBkg->Add(cfg.bkgFile.c_str());	
 
 	//TTree *tr_Data = (TTree*) fin->Get("IBD");
 	TTree *tr_Data = (TTree*) chainData;
 	setAddress(tr_Data);
 
-	TTree *tr_Sig = (TTree*) fSig->Get("tr");
+	TTree *tr_Sig = (TTree*) chainSig;
 	setAddress(tr_Sig);
 
 	TTree *tr_Bkg = (TTree*) chainBkg;
 	setAddress(tr_Bkg);
 
 	TString evalData = TString::Format("./evals/data/evalData_%s.root",weightFile.Data());
-
-	fillTree(reader,tr_Data,evalData);
+	if(cfg.evalData)
+		fillTree(reader,tr_Data,evalData);
 
 
 	TString evalSig = TString::Format("./evals/sig/evalSig_%s.root",weightFile.Data());
-
-	fillTree(reader,tr_Sig,evalSig);
+	if(cfg.evalSig)
+		fillTree(reader,tr_Sig,evalSig);
 
 	TString evalBkg = TString::Format("./evals/bkg/evalBkg_%s.root",weightFile.Data());
-
-	fillTree(reader,tr_Bkg,evalBkg);
+	if(cfg.evalBkg)
+		fillTree(reader,tr_Bkg,evalBkg);
 }
 
 void setAddress(TTree *tr){

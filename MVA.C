@@ -29,8 +29,8 @@ void MVA(){
 	TCut distCut = "dist<2500";
 	TCut preCut = epCut&&edCut&&dtCut&&distCut;
 
-	int nTrainS = 1000000;
-	int nTrainB = 1000000;
+	int nTrainS = 3000000;
+	int nTrainB = 3000000;
 	int nTestS  = 1000000;
 	int nTestB  = 1000000;
 
@@ -44,11 +44,7 @@ void MVA(){
 	//fac->BookMethod(TMVA::Types::kBDT,"TMVA_BDT","VarTransform=Norm");
 	//fac->BookMethod(TMVA::Types::kSVM,"TMVA_SVM","VarTransform=Norm");
 	
-	fac->BookMethod(TMVA::Types::kMLP,"TMVA_MLP_9_9","VarTransform=Norm:HiddenLayers=9,9:UseRegulator=True");
-	fac->BookMethod(TMVA::Types::kMLP,"TMVA_MLP_9_9_9","VarTransform=Norm:HiddenLayers=9,9,9:UseRegulator=True");
-	//fac->BookMethod(TMVA::Types::kMLP,"TMVA_MLP_5_5_5_reg","VarTransform=Norm:HiddenLayers=5,5,5:UseRegulator=True");
-	//fac->BookMethod(TMVA::Types::kMLP,"TMVA_MLP_5_5_5_5","VarTransform=Norm:HiddenLayers=5,5,5,5");
-	//fac->BookMethod(TMVA::Types::kTMlpANN,"ROOT_MLP","!V:HiddenLayers=N+1,N+1");
+	fac->BookMethod(TMVA::Types::kMLP,"TMVA_MLP_99_reg","VarTransform=Norm:HiddenLayers=9,9:UseRegulator=True");
 
 	fac->TrainAllMethods();
 	fac->TestAllMethods();
