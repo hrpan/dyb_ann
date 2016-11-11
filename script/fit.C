@@ -12,6 +12,8 @@ void fit(TString weightFile){
 	TString histFile = TString::Format("./hists/hist_%s.root",weightFile.Data());
 	TString pngFile = TString::Format("./plots/%s.png",weightFile.Data());
 	TString resFile = TString::Format("./plots/%s_res.png",weightFile.Data());
+	TString ratFile = TString::Format("./plots/%s_rat.png",weightFile.Data());
+	TString asyFile = TString::Format("./plots/%s_asy.png",weightFile.Data());
 
 	TF1 *fitf = new TF1("fitf",func,-0.1,1.1,2);
 	fitf->SetParameter(0,1);
@@ -24,20 +26,21 @@ void fit(TString weightFile){
 	h_Bkg = (TH1*) f_hist->Get("h_Bkg");
 	h_Bkg->SetLineColor(kGreen);
 
-	h_Data = (TH1*) f_hist->Get("h_Data");	
+	h_Data = (TH1*) f_hist->Get("h_Data");
+	h_Data->Sumw2();	
 	h_Data->SetLineColor(kBlack);
 	h_Data->SetMarkerStyle(8);
 	h_Data->SetMarkerSize(0.3);
 	h_Data->Draw("E1");
 
 	gPad->SetLogy();	
-	TFitResultPtr r = h_Data->Fit(fitf,"0 S","",-0.1,1.1);
+	TFitResultPtr r = h_Data->Fit(fitf,"0 S","",0.1,1.1);
 	r->Print("v");
 
 	h_Sig->Scale(fitf->GetParameter(0));
 	h_Bkg->Scale(fitf->GetParameter(1));
 
-	h_Sum = (TH1*)h_Sig->Clone();
+	h_Sum = (TH1*)h_Sig->Clone();	
 	h_Sum->Add(h_Bkg);
 	h_Sum->SetLineColor(kRed);
 
@@ -46,10 +49,19 @@ void fit(TString weightFile){
 
 	TH1 *h_Res = h_Sum->Clone();
 	h_Res->SetTitle("Residual");
-	for(int i=1;i<=h_Data->GetNbinsX();++i){
-		cout << res[i-1] << endl;
+	for(int i=1;i<=h_Data->GetNbinsX();++i)
 		h_Res->SetBinContent(i,res[i-1]);
-	}
+	
+
+	TH1 *h_Rat = h_Sum->Clone();
+	h_Rat->SetTitle("Ratio (MC/DATA)");
+	h_Rat->Sumw2();
+	h_Rat->SetMaximum(1.5);
+	h_Rat->SetMinimum(0.8);
+	h_Rat->Divide(h_Data);
+
+	TH1 *h_Asy = h_Sum->GetAsymmetry(h_Data);
+	h_Asy->SetTitle("Asymmetry");
 
 	h_Sig->SetFillColor(kBlue);
 	h_Sig->SetFillStyle(3005);
@@ -73,6 +85,10 @@ void fit(TString weightFile){
 	gPad->SetLogy(0);
 	h_Res->Draw();	
 	c1->SaveAs(resFile);
+	h_Rat->Draw("E0");
+	c1->SaveAs(ratFile);
+	h_Asy->Draw();
+	c1->SaveAs(asyFile);
 }
 
 double func(double *x, double *par){

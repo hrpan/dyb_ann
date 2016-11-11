@@ -1,0 +1,17 @@
+#FILES
+DATAFILE=../../data_ibd_ct/*.root
+BKGFILE=../acc/data_pair_sig/*.root
+SIGFILE=../../data/mcFormat.root
+TRAINFILE=MVA.root
+
+#EVAL
+EVALDATA=TRUE
+EVALBKG=TRUE
+EVALSIG=TRUE
+
+#HIST
+USETRAINTREE=FALSE
+BINS=100
+XMIN=-0.1
+XMAX=1.1
+
