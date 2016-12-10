@@ -10,10 +10,10 @@ To evaluate a file, use ```apply.C``` with the following format
 
 Make sure that your ```TTree``` contains four ```TBranch``` with the following names
 
--ep (Prompt Energy)
--ed (Delay Energy)
--dt (Capture Time)
--dist (Prompt-Delay Distance)
+- ep (Prompt Energy)
+- ed (Delay Energy)
+- dt (Capture Time)
+- dist (Prompt-Delay Distance)
 
 (Note that the naming has to be exactly the same, otherwise it won't work.)
 
