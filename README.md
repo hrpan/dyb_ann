@@ -31,6 +31,6 @@ then we load ```ibd.root``` with ```ROOT```
 
 Finally we add ```eval_kMLP``` as friend for ```IBD```
 
-```root [0] IBD->AddFriend("eval_kMLP","ibd_kMLP.root")```
+```root [0] IBD->AddFriend("MLP","ibd_kMLP.root")```
 
 Now you can use ```eval_kMLP``` as if it is in the same ```TTree``` as ```IBD```
