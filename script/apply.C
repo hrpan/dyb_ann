@@ -49,10 +49,17 @@ void fillTree(TMVA::Reader *reader, TTree *tr_in, TString &fileName){
 
 	int nevts = tr_in->GetEntries();
 	for(int i=0;i<nevts;++i){
+		if(i%128==0) printProgress(i,nevts);
 		tr_in->GetEntry(i);
 		eval_kMLP = reader->EvaluateMVA("kMLP");
 		tr_out->Fill();
 	}
+	cout << "Evaluation complete" << endl;
 	fout->Write();
 	fout->Close();
+}
+
+void printProgress(int i,const int nevts){
+	printf("\rProgress: %d/%d",i+1,nevts);
+	fflush(stdout);
 }
