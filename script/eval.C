@@ -6,7 +6,7 @@ void eval(TString weightFile){
 	readCFG cfg;
 
 	TMVA::Reader *reader = new TMVA::Reader();
-	reader->AddVariable("ep",&ep);
+	//reader->AddVariable("ep",&ep);
 	reader->AddVariable("ed",&ed);
 	reader->AddVariable("dt",&dt);
 	reader->AddVariable("dist",&dist);

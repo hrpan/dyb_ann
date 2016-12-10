@@ -11,7 +11,7 @@ TCut dtCut = "dt>1&&dt<400";
 TCut distCut = "dist<2500";
 TCut sigClass = "classID==0";
 TCut bkgClass = "classID==1";
-TCut bkgEval = "eval_kMLP<0.1";
+TCut bkgEval = "eval_kMLP<0.2";
 TCut sigEval = "eval_kMLP>0.9";
 
 void plot(TString weightFile){

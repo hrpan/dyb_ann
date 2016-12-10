@@ -18,7 +18,7 @@ void MVA(){
 	fac->AddSignalTree(sigTree,sigW);
 	fac->AddBackgroundTree(bkgTree,bkgW);
 
-	fac->AddVariable("ep",'F');	
+	//fac->AddVariable("ep",'F');	
 	fac->AddVariable("ed",'F');	
 	fac->AddVariable("dt",'F');	
 	fac->AddVariable("dist",'F');
@@ -29,10 +29,10 @@ void MVA(){
 	TCut distCut = "dist<2500";
 	TCut preCut = epCut&&edCut&&dtCut&&distCut;
 
-	int nTrainS = 3000000;
-	int nTrainB = 3000000;
-	int nTestS  = 1000000;
-	int nTestB  = 1000000;
+	int nTrainS = 4000000;
+	int nTrainB = 4000000;
+	int nTestS  = 2000000;
+	int nTestB  = 2000000;
 
 	TString trainOpts = TString::Format("nTrain_Signal=%d:nTrain_Background=%d",nTrainS,nTrainB);
 	TString testOpts = TString::Format("nTest_Signal=%d:nTest_Background=%d",nTestS,nTestB);
@@ -41,10 +41,7 @@ void MVA(){
 	fac->PrepareTrainingAndTestTree(preCut,prepOpts);
 
 	
-	//fac->BookMethod(TMVA::Types::kBDT,"TMVA_BDT","VarTransform=Norm");
-	//fac->BookMethod(TMVA::Types::kSVM,"TMVA_SVM","VarTransform=Norm");
-	
-	fac->BookMethod(TMVA::Types::kMLP,"TMVA_MLP_99_reg","VarTransform=Norm:HiddenLayers=9,9:UseRegulator=True");
+	fac->BookMethod(TMVA::Types::kMLP,"TMVA_MLP_99_noep","VarTransform=Norm:HiddenLayers=9,9:UseRegulator=True:NCycles=500");
 
 	fac->TrainAllMethods();
 	fac->TestAllMethods();

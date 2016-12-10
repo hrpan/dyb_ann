@@ -5,6 +5,8 @@ TH1 *h_Sum;
 // MVA_TMVA_MLP_5_5_5_5.weights.xml
 void fit(TString weightFile){
 
+	gStyle->SetOptStat(0);
+
 	weightFile.ReplaceAll("./","");
 	weightFile.ReplaceAll("weights/MVA_T","T");
 	weightFile.ReplaceAll(".weights.xml","");
@@ -55,9 +57,9 @@ void fit(TString weightFile){
 
 	TH1 *h_Rat = h_Sum->Clone();
 	h_Rat->SetTitle("Ratio (MC/DATA)");
+	h_Rat->SetMaximum(1.1);
+	h_Rat->SetMinimum(0.6);
 	h_Rat->Sumw2();
-	h_Rat->SetMaximum(1.5);
-	h_Rat->SetMinimum(0.8);
 	h_Rat->Divide(h_Data);
 
 	TH1 *h_Asy = h_Sum->GetAsymmetry(h_Data);
@@ -94,9 +96,8 @@ void fit(TString weightFile){
 double func(double *x, double *par){
 	double r1 = *(par);
 	double r2 = *(par+1);
-	h_Sum = (TH1*)h_Sig->Clone();
-	h_Sum->Add(h_Sig,h_Bkg,r1,r2);
-	int bin = h_Sig->FindBin(*x);
-	return h_Sum->GetBinContent(bin);
+	int bin = h_Data->FindBin(*x);
+
+	return r1*h_Sig->GetBinContent(bin)+r2*h_Bkg->GetBinContent(bin);
 }
 

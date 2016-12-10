@@ -84,13 +84,15 @@ then
 	then
 		if [ "$doFORCE" = true ];
 		then
-			echo "Fitting $plotFile"
+			echo "Fitting&plotting $plotFile"
 			root -l -b -q 'script/fit.C("'$weightFile'")'
+			root -l -b -q 'script/plot.C("'$weightFile'")'
 		else
 			echo "$plotFile already exists"
 		fi
 	else
-		echo "Fitting $plotFile"
+		echo "Fitting&plotting $plotFile"
 		root -l -b -q 'script/fit.C("'$weightFile'")'
+		root -l -b -q 'script/plot.C("'$weightFile'")'
 	fi
 fi
