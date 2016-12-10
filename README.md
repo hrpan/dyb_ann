@@ -1,6 +1,25 @@
 # dyb_ann
 Artificial neural network for accidental background subtraction
 
+##Installation
+
+On PDSF, use the following command
+
+```
+>module load git
+>git clone https://github.com/hrpan/dyb_ann
+
+```
+
+For personal computers, make sure that ```git``` is installed, then simply clone the repository
+
+```
+>git clone https://github.com/hrpan/dyb_ann
+```
+
+And you are good to go.
+
+
 
 ##Evaluating a file
 
